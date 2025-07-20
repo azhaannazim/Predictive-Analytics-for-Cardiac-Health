@@ -2,90 +2,99 @@
 
 ## Project Overview
 
-This project aims to predict whether a person has heart disease based on various medical parameters. The dataset used for this project is sourced from the UCI Cleveland repository.
+This project develops a machine learning model to predict the presence of heart disease based on a patient's medical parameters. The model is trained on the well-known UCI Cleveland Heart Disease dataset and leverages an ensemble approach to achieve high accuracy and reliability.
 
 ## Table of Contents
 
-1. Problem Definition
-2. Data
-3. Evaluation
-4. Features
-5. Modeling
-6. Experimentation
-7. Results
-8. Visualisations
+1.  [Problem Definition](#problem-definition)
+2.  [Data](#data)
+3.  [Methodology](#methodology)
+4.  [Results & Evaluation](#results--evaluation)
+5.  [Visualizations](#visualizations)
+6.  [How to Use](#how-to-use)
+7.  [Future Enhancements](#future-enhancements)
 
 ## Problem Definition
 
-The objective is to develop a machine learning model that can predict the presence of heart disease in a patient based on medical parameters.
+Given the clinical parameters of a patient, can we develop a machine learning model to accurately classify whether that person has heart disease?
 
 ## Data
 
-The data is sourced from the [UCI Cleveland Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease). It includes 76 attributes, but the commonly used subset includes 14 attributes.
+The data is sourced from the [UCI Cleveland Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease). While the full database contains 76 attributes, this project uses the commonly cited subset of 14 features for modeling.
 
-## Evaluation
+### Key Features
 
-The primary metric for evaluating the model is accuracy, but other metrics like precision, recall, F1-score, and ROC-AUC are also considered to ensure a comprehensive evaluation. Feature Imporatance was also
-evaluated to determine the importance of each feature on the accuracy of the model.
+-   `age`: Age of the patient
+-   `sex`: Gender of the patient (1 = male; 0 = female)
+-   `cp`: Chest pain type
+-   `trestbps`: Resting blood pressure
+-   `chol`: Serum cholesterol
+-   `fbs`: Fasting blood sugar > 120 mg/dl
+-   `restecg`: Resting electrocardiographic results
+-   `thalach`: Maximum heart rate achieved
+-   `exang`: Exercise-induced angina
+-   `oldpeak`: ST depression induced by exercise relative to rest
+-   `slope`: Slope of the peak exercise ST segment
+-   `ca`: Number of major vessels colored by fluoroscopy
+-   `thal`: Thalassemia type
+-   `target`: Diagnosis of heart disease (1 = yes, 0 = no)
 
-## Features
+## Methodology
 
-The dataset contains the following key features:
+The project followed a structured machine learning workflow:
 
-- `age`: Age of the patient
-- `sex`: Gender of the patient
-- `cp`: Chest pain type
-- `trestbps`: Resting blood pressure
-- `chol`: Serum cholesterol
-- `fbs`: Fasting blood sugar
-- `restecg`: Resting electrocardiographic results
-- `thalach`: Maximum heart rate achieved
-- `exang`: Exercise-induced angina
-- `oldpeak`: ST depression induced by exercise relative to rest
-- `slope`: Slope of the peak exercise ST segment
-- `ca`: Number of major vessels colored by fluoroscopy
-- `thal`: Thalassemia
-- `target`: Diagnosis of heart disease (0 = no, 1 = yes)
+1.  **Exploratory Data Analysis (EDA)**: The dataset was analyzed to understand feature distributions, identify correlations, and visualize relationships between variables and the target. A correlation matrix was used to assess multicollinearity and feature relevance.
 
-### Exploratory Data Analysis (EDA)
+2.  **Model Selection**: Three baseline classification models were trained and evaluated:
+    -   Logistic Regression
+    -   K-Nearest Neighbors (KNN)
+    -   Random Forest Classifier
 
-EDA includes descriptive statistics, visualizations like histograms and box plots, and correlation analysis to identify relationships between features and the target variable. 
-**Correlation Coefficients of the features of the dataset**:
-<img width="816" height="623" alt="Screenshot 2025-07-20 at 12 08 11 PM" src="https://github.com/user-attachments/assets/76f418db-e33d-4e0b-b8c8-9138872b7cc7" />
+3.  **Hyperparameter Tuning**: `RandomizedSearchCV` was used to efficiently search for the optimal hyperparameters for the Logistic Regression and Random Forest models, which were the top-performing baseline models.
 
-## Modeling
+4.  **Ensemble Modeling**: To enhance predictive performance, a **`VotingClassifier`** was implemented. This ensemble model combines the strengths of the tuned Logistic Regression and Random Forest models, using a 'soft' voting strategy to average their predicted probabilities, leading to a more robust and accurate final model.
 
-The following models were considered:
+## Results & Evaluation
 
-- Logistic Regression
-- Random Forest
-- k-Nearest Neighbors
+The final ensemble model (`VotingClassifier`) demonstrated a significant improvement over the baseline models, achieving a final test accuracy of **87%**.
 
-Extensive model hyperparameter tuning was conducted using grid search and cross-validation to find the best hyperparameters for the chosen model. Ensembling techniques were also explored.
-The final model was chosen based on performance metrics and hyperparameter tuning which is Logistic Regression.
+The detailed performance metrics are shown in the classification report below:
 
+| Metric         | Class 0 (No Disease) | Class 1 (Has Disease) | Weighted Avg |
+| :------------- | :------------------- | :-------------------- | :----------- |
+| **Precision** | 0.90                 | 0.84                  | 0.87         |
+| **Recall** | 0.84                 | 0.90                  | 0.87         |
+| **F1-Score** | 0.87                 | 0.87                  | 0.87         |
+| **Support** | 32                   | 29                    | 61           |
 
-## Experimentation
+A **Recall of 0.90** for predicting the presence of heart disease (Class 1) is a key result, as it indicates the model is highly effective at correctly identifying patients who have the condition, minimizing the risk of false negatives.
 
-It involves greater research and understanding of the dataset in order to achieve a success rate of say 95%. Extensive experimentation is done with different parameters and feautures based on research in order
-to gain such levels of accuracy. As this is a begineers project, this part was skipped.
+## Visualizations
 
-## Results
+Key visualizations from the analysis include:
 
-The final model achieved an accuracy of 82.49%. Below are some key performance metrics:
+-   **Correlation Matrix Heatmap**: To show the relationships between all features in the dataset.
+-   **ROC Curve**: Demonstrating the model's performance across different classification thresholds. The final model achieved a high Area Under the Curve (AUC).
+-   **Feature Importance Plot**: Highlighting the most influential medical parameters for predicting heart disease, derived from the Logistic Regression model's coefficients.
+-   **Model Performance Comparison**: A bar chart comparing the accuracy of the baseline models.
 
-- **Accuracy**: 82.49%
-- **Precision**: 81.22%
-- **Recall**: 89.09%
-- **F1-score**: 84.81%
-- **ROC-AUC**: 92%
+## How to Use
 
+To replicate this analysis, follow these steps:
 
-### Visualizations
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/azhaannazim/Predictive-Analytics-for-Cardiac-Health.git](https://github.com/azhaannazim/Predictive-Analytics-for-Cardiac-Health.git)
+    ```
+2.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Run the Jupyter Notebook:**
+    Open and run the `predictive-analytics-for-cardiac-health.ipynb` notebook in a Jupyter environment.
 
-- **ROC Curve**:
--  <img width="601" height="434" alt="Screenshot 2025-07-20 at 12 02 44 PM" src="https://github.com/user-attachments/assets/f4493b25-4ee4-43fc-b4e0-ea5b6328ae17" />
-- **Feature Importance**:
-- <img width="601" height="534" alt="Screenshot 2025-07-20 at 12 04 54 PM" src="https://github.com/user-attachments/assets/0061ff0f-92dd-444a-8eef-55ccbcf16a3c" />
-- **Scores**:
-- <img width="605" height="565" alt="Screenshot 2025-07-20 at 12 05 40 PM" src="https://github.com/user-attachments/assets/4c3b59b4-d8d9-47dc-b75e-6f2e5092642a" />
+## Future Enhancements
+
+-   **Advanced Models**: Explore more complex models like XGBoost, LightGBM, or CatBoost, which often yield state-of-the-art results on tabular data.
+-   **Feature Scaling**: Implement feature scaling (e.g., `StandardScaler`) within a `Pipeline` to see if it further improves model performance, especially for Logistic Regression.
+-   **Deployment**: Deploy the final trained model as a simple web application using Flask or Streamlit to allow for real-time predictions.
