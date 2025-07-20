@@ -1,5 +1,4 @@
-# End-to-End-Heart-Disease-Prediction
-# End to End Heart Disease Prediction
+# Predictive Analytics for Cardiac Health
 
 ## Project Overview
 
